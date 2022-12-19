@@ -11,7 +11,7 @@ COPY src ./src
 RUN ./gradlew build
 
 
-FROM oznu/s6-alpine:3.11
+FROM oznu/s6-alpine:3.13
 LABEL maintainer="Jake Wharton <docker@jakewharton.com>"
 
 RUN apk add --no-cache \
