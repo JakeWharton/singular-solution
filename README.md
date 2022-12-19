@@ -47,10 +47,9 @@ Options:
 The container automatically triggers the binary using cron.
 
 [![Docker Image Version](https://img.shields.io/docker/v/jakewharton/singular-solution?sort=semver)][hub]
-[![Docker Image Size](https://img.shields.io/docker/image-size/jakewharton/singular-solution)][layers]
+[![Docker Image Size](https://img.shields.io/docker/image-size/jakewharton/singular-solution)][hub]
 
- [hub]: https://hub.docker.com/r/jakewharton/singular-solution/
- [layers]: https://microbadger.com/images/jakewharton/singular-solution
+[hub]: https://hub.docker.com/r/jakewharton/singular-solution/
 
 ```
 $ docker run -it --rm
