@@ -78,6 +78,7 @@ private class SingularSolutionCommand : CliktCommand(
 				}
 				print(" unblocking…")
 				if (!dryRun) {
+					// TODO if this call fails we permanently ban this user which sucks.
 					val result = users.destroyBlock(id)
 					result.rateLimitStatus.sleepIfNeeded()
 				}
