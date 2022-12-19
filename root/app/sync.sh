@@ -8,7 +8,6 @@ fi
 set -e
 
 /app/bin/singular-solution \
-	--dry-run \
 	--access-token "$ACCESS_TOKEN" \
 	--access-secret "$ACCESS_SECRET" \
 	--api-key "$API_KEY" \
