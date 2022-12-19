@@ -7,13 +7,6 @@ Not running in cron mode
 	exit 0
 fi
 
-if [ ! -d /data ]; then
-	echo "
-ERROR: '/data' directory must be mounted
-"
-	exit 1
-fi
-
 if [ -z "$HEALTHCHECK_ID" ]; then
 	echo "
 NOTE: Define HEALTHCHECK_ID with https://healthchecks.io to monitor sync job"
