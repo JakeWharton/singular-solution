@@ -1,0 +1,32 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.21'
+	}
+}
+
+apply plugin: 'org.jetbrains.kotlin.jvm'
+
+apply plugin: 'application'
+application {
+	mainClass = 'com.jakewharton.singularsolution.Main'
+}
+
+dependencies {
+	implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
+	implementation 'com.github.ajalt.clikt:clikt:3.5.0'
+	implementation 'org.twitter4j:twitter4j-core:4.1.2'
+}
+
+repositories {
+	mavenCentral()
+}
+
+tasks.named("distTar").configure { task ->
+	task.enabled = false
+}
+tasks.named("assemble").configure { task ->
+	task.dependsOn(tasks.named("installDist"))
+}
