@@ -32,13 +32,14 @@ and run `bin/singular-solution` or `bin/singular-solution.bat`.
 $ singular-solution --help
 Usage: singular-solution [OPTIONS]
 
-  Perform a one-time sync of the latest tweets
+  Block and quickly unblock all followers to keep count at zero
 
 Options:
   --access-token KEY   OAuth access token
   --access-secret KEY  OAuth access token secret
   --api-key KEY        OAuth consumer API key
   --api-secret KEY     OAuth consumer API secret
+  --dry-run            Print destructive actions instead of performing them
   -h, --help           Show this message and exit
 ```
 
