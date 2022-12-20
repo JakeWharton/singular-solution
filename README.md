@@ -45,12 +45,19 @@ Options:
 
 ## Docker
 
-The container automatically triggers the binary using cron.
+A container with the binary is available from Docker Hub and GitHub Container Registry.
+
+* `jakewharton/singular-solution`
+* `ghcr.io/jakewharton/singular-solution`
+
+The `trunk` branch pushes to the `trunk` tag on both registries, or you can use a tagged version.
 
 [![Docker Image Version](https://img.shields.io/docker/v/jakewharton/singular-solution?sort=semver)][hub]
 [![Docker Image Size](https://img.shields.io/docker/image-size/jakewharton/singular-solution)][hub]
 
 [hub]: https://hub.docker.com/r/jakewharton/singular-solution/
+
+The container automatically triggers the binary using cron.
 
 ```
 $ docker run -it --rm
