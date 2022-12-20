@@ -52,35 +52,48 @@ private class SingularSolutionCommand : CliktCommand(
 			println("!!! DRY RUN !!!\n")
 		}
 
+		var rateLimitStatus: RateLimitStatus? = null
 		var cursor = -1L
 		while (cursor != 0L) {
+			rateLimitStatus?.sleepIfNeeded()
+
 			print("Fetching followers…")
 			val ids = try {
 				friendsFollowers.getFollowersIDs(cursor)
 			} catch (e: TwitterException) {
 				if (e.exceededRateLimitation()) {
 					println(" failed.")
-					e.rateLimitStatus.sleepIfNeeded()
+					rateLimitStatus = e.rateLimitStatus
 					continue
 				} else {
 					throw e
 				}
 			}
 			cursor = ids.nextCursor
-			println(" done. (count=${ids.iDs.size}, more=${cursor != 0L})\n")
+			rateLimitStatus = ids.rateLimitStatus
+			println(" done. (count=${ids.iDs.size}, hasMore=${cursor != 0L})\n")
 
-			ids.rateLimitStatus.sleepIfNeeded(callCount = 2)
+			rateLimitStatus.sleepIfNeeded(callCount = 2)
 
 			for (id in ids.iDs) {
 				print("$id: blocking…")
 				if (!dryRun) {
-					users.createBlock(id)
+					try {
+						users.createBlock(id)
+					} catch (e: Throwable) {
+						println(" failed!")
+						throw e
+					}
 				}
 				print(" unblocking…")
 				if (!dryRun) {
-					// TODO if this call fails we permanently ban this user which sucks.
-					val result = users.destroyBlock(id)
-					result.rateLimitStatus.sleepIfNeeded()
+					val result = try {
+						users.destroyBlock(id)
+					} catch (e: Throwable) {
+						println(" failed! MANUAL INTERVENTION NEEDED!!")
+						throw e
+					}
+					rateLimitStatus = result.rateLimitStatus
 				}
 				println(" done.")
 			}
@@ -92,20 +105,20 @@ private class SingularSolutionCommand : CliktCommand(
 	}
 
 	private suspend fun RateLimitStatus.sleepIfNeeded(callCount: Int = 1) {
-		if (remaining < callCount) {
-			println()
-			var lastLength = 0
-			for (i in secondsUntilReset downTo 1) {
-				val message = "\rRate limited! Cooling off ${i.seconds}…"
-				if (message.length < lastLength) {
-					print("\r" + " ".repeat(lastLength - 1))
-				}
-				lastLength = message.length
-				print(message)
-				delay(1.seconds)
+		if (remaining > callCount) return
+
+		println()
+		var lastLength = 0
+		for (i in secondsUntilReset downTo 1) {
+			val message = "\rRate limited! Cooling off ${i.seconds}…"
+			if (message.length < lastLength) {
+				print("\r" + " ".repeat(lastLength - 1))
 			}
-			delay(secondsUntilReset.seconds)
-			println("\rRate limited! Cooling off… done")
+			lastLength = message.length
+			print(message)
+			delay(1.seconds)
 		}
+		delay(secondsUntilReset.seconds)
+		println("\rRate limited! Cooling off… done")
 	}
 }
