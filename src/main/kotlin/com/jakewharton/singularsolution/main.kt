@@ -81,6 +81,11 @@ private class SingularSolutionCommand : CliktCommand(
 					try {
 						users.createBlock(id)
 					} catch (e: Throwable) {
+						if (e is TwitterException && e.statusCode == 404) {
+							println(" user not found!")
+							rateLimitStatus = e.rateLimitStatus
+							continue
+						}
 						println(" failed!")
 						throw e
 					}
