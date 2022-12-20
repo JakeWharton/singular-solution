@@ -11,6 +11,21 @@ COPY src ./src
 RUN ./gradlew build
 
 
+FROM koalaman/shellcheck-alpine:stable AS shellcheck
+WORKDIR /overlay
+COPY root/ ./
+RUN find . -type f | xargs shellcheck -e SC1008
+
+
+FROM mvdan/shfmt:v3-alpine AS shfmt
+WORKDIR /overlay
+COPY root/ ./
+COPY .editorconfig /
+RUN shfmt -d .
+
+
+
+
 FROM oznu/s6-alpine:3.13
 LABEL maintainer="Jake Wharton <docker@jakewharton.com>"
 
