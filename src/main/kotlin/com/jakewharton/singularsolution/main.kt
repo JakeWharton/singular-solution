@@ -52,10 +52,10 @@ private class SingularSolutionCommand : CliktCommand(
 			println("!!! DRY RUN !!!\n")
 		}
 
-		var rateLimitStatus: RateLimitStatus? = null
+		var rateLimitStatus: RateLimitStatus = RateLimit.Unlimited
 		var cursor = -1L
 		while (cursor != 0L) {
-			rateLimitStatus?.sleepIfNeeded()
+			rateLimitStatus.sleepIfNeeded()
 
 			print("Fetching followers…")
 			val ids = try {
@@ -64,6 +64,10 @@ private class SingularSolutionCommand : CliktCommand(
 				if (e.exceededRateLimitation()) {
 					println(" failed.")
 					rateLimitStatus = e.rateLimitStatus
+					continue
+				} else if (e.statusCode == 503) {
+					println(" service unavailable!")
+					rateLimitStatus = RateLimit.FiveMinutes
 					continue
 				} else {
 					throw e
@@ -82,9 +86,18 @@ private class SingularSolutionCommand : CliktCommand(
 						users.createBlock(id)
 					} catch (e: Throwable) {
 						if (e is TwitterException && e.statusCode == 404) {
-							println(" user not found!")
-							rateLimitStatus = e.rateLimitStatus
-							continue
+							when (e.statusCode) {
+								404 -> {
+									println(" user not found!")
+									rateLimitStatus = e.rateLimitStatus
+									continue
+								}
+								503 -> {
+									println(" service unavailable!")
+									rateLimitStatus = RateLimit.FiveMinutes
+									continue
+								}
+							}
 						}
 						println(" failed!")
 						throw e
@@ -103,6 +116,7 @@ private class SingularSolutionCommand : CliktCommand(
 				println(" done.")
 			}
 		}
+
 		println("\nAll done!")
 		if (dryRun) {
 			println("!!! DRY RUN !!!")
@@ -125,5 +139,20 @@ private class SingularSolutionCommand : CliktCommand(
 		}
 		delay(secondsUntilReset.seconds)
 		println("\rRate limited! Cooling off… done")
+	}
+}
+
+private data class RateLimit(
+	private val remaining: Int,
+	private val secondsUntilReset: Int,
+) : RateLimitStatus {
+	override fun getRemaining() = remaining
+	override fun getLimit() = throw AssertionError()
+	override fun getResetTimeInSeconds() = throw AssertionError()
+	override fun getSecondsUntilReset() = secondsUntilReset
+
+	companion object {
+		val Unlimited = RateLimit(remaining = Int.MAX_VALUE, secondsUntilReset = 0)
+		val FiveMinutes = RateLimit(remaining = 0, secondsUntilReset = 5 * 60)
 	}
 }
