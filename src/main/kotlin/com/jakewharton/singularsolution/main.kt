@@ -63,7 +63,7 @@ private class SingularSolutionCommand : CliktCommand(
 			} catch (e: TwitterException) {
 				if (e.exceededRateLimitation()) {
 					println(" failed.")
-					rateLimitStatus = e.rateLimitStatus
+					rateLimitStatus = e.rateLimitStatus ?: RateLimit.FiveMinutes
 					continue
 				} else if (e.statusCode == 503) {
 					println(" service unavailable!")
@@ -74,7 +74,7 @@ private class SingularSolutionCommand : CliktCommand(
 				}
 			}
 			cursor = ids.nextCursor
-			rateLimitStatus = ids.rateLimitStatus
+			rateLimitStatus = ids.rateLimitStatus ?: RateLimit.Unlimited
 			println(" done. (count=${ids.iDs.size}, hasMore=${cursor != 0L})\n")
 
 			rateLimitStatus.sleepIfNeeded(callCount = 2)
@@ -89,7 +89,7 @@ private class SingularSolutionCommand : CliktCommand(
 							when (e.statusCode) {
 								404 -> {
 									println(" user not found!")
-									rateLimitStatus = e.rateLimitStatus
+									rateLimitStatus = e.rateLimitStatus ?: RateLimit.Unlimited
 									continue
 								}
 								503 -> {
@@ -111,7 +111,7 @@ private class SingularSolutionCommand : CliktCommand(
 						println(" failed! MANUAL INTERVENTION NEEDED!!")
 						throw e
 					}
-					rateLimitStatus = result.rateLimitStatus
+					rateLimitStatus = result.rateLimitStatus ?: RateLimit.Unlimited
 				}
 				println(" done.")
 			}
