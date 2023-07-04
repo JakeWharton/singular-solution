@@ -16,7 +16,7 @@ application {
 
 dependencies {
 	implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2'
-	implementation 'com.github.ajalt.clikt:clikt:3.5.4'
+	implementation 'com.github.ajalt.clikt:clikt:4.0.0'
 	implementation 'org.twitter4j:twitter4j-core:4.1.2'
 }
 
