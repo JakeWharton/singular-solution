@@ -7,10 +7,14 @@ Available as a binary and Docker container.
 
 ## Usage
 
-Singular Solution consumes data from Twitter and requires you register your own Twitter application for keys:
-https://developer.twitter.com/en/apply-for-access
+Singular Solution needs an API key and secret as well as an OAuth access token and access secret.
 
-You will need an OAuth access token and access secret as well as an API key and secret.
+If you only have an API key and secret and need an access token and secret the `auth` subcommand
+(documented below) can help you obtain one.
+
+If you need an API key and secret then Google around and you should be able to find those which
+are used by the official Twitter clients. It is no longer feasible to register your own application
+since the API endpoints needed cost a ridiculous amount of money.
 
 From there, you can run Singular Solution in one of two ways:
 
@@ -30,17 +34,39 @@ and run `bin/singular-solution` or `bin/singular-solution.bat`.
 
 ```
 $ singular-solution --help
-Usage: singular-solution [OPTIONS]
+Usage: singular-solution [<options>] <command> [<args>]...
+
+Options:
+  -h, --help  Show this message and exit
+
+Commands:
+  auth  Perform interactive authentication to get an access token and secret
+  run   Block and quickly unblock all followers to keep count at zero
+```
+```
+$ singular-solution auth -h
+Usage: singular-solution auth [<options>]
+
+  Perform interactive authentication to get an access token and secret
+
+Options:
+  --api-key=<key>     OAuth consumer API key
+  --api-secret=<key>  OAuth consumer API secret
+  -h, --help          Show this message and exit
+```
+```
+$ singular-solution run -h
+Usage: singular-solution run [<options>]
 
   Block and quickly unblock all followers to keep count at zero
 
 Options:
-  --access-token KEY   OAuth access token
-  --access-secret KEY  OAuth access token secret
-  --api-key KEY        OAuth consumer API key
-  --api-secret KEY     OAuth consumer API secret
-  --dry-run            Print destructive actions instead of performing them
-  -h, --help           Show this message and exit
+  --access-token=<key>   OAuth access token
+  --access-secret=<key>  OAuth access token secret
+  --api-key=<key>        OAuth consumer API key
+  --api-secret=<key>     OAuth consumer API secret
+  --dry-run              Print destructive actions instead of performing them
+  -h, --help             Show this message and exit
 ```
 
 ## Docker

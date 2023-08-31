@@ -3,10 +3,15 @@
 package com.jakewharton.singularsolution
 
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.NoOpCliktCommand
+import com.github.ajalt.clikt.core.subcommands
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.help
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
+import com.github.scribejava.apis.TwitterApi
+import com.github.scribejava.core.builder.ServiceBuilder
+import java.util.Scanner
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -15,11 +20,53 @@ import twitter4j.TwitterException
 import twitter4j.v1.RateLimitStatus
 
 fun main(vararg args: String) {
-	SingularSolutionCommand().main(args)
+	NoOpCliktCommand(name = "singular-solution")
+		.subcommands(
+			AuthCommand(),
+			RunCommand(),
+		)
+		.main(args)
 }
 
-private class SingularSolutionCommand : CliktCommand(
-	name = "singular-solution",
+private class AuthCommand : CliktCommand(
+	name = "auth",
+	help = "Perform interactive authentication to get an access token and secret",
+) {
+	private val apiKey by option(metavar = "KEY")
+		.required()
+		.help("OAuth consumer API key")
+	private val apiSecret by option(metavar = "KEY")
+		.required()
+		.help("OAuth consumer API secret")
+
+	override fun run() {
+		val service = ServiceBuilder(apiKey)
+			.apiSecret(apiSecret)
+			.build(TwitterApi.instance())
+
+		val requestToken = service.requestToken
+		val authorizationUrl = service.getAuthorizationUrl(requestToken)
+		println("Visit the following URL in your browser to authorize the app:")
+		println()
+		println("    $authorizationUrl")
+		println()
+		println("Once completed, you should see a PIN. Paste that below:")
+		println()
+		print("PIN: ")
+		val code = Scanner(System.`in`).nextLine()
+		val accessToken = service.getAccessToken(requestToken, code);
+		println()
+		println("SUCCESS!")
+		println()
+		println("Consumer API key: $apiKey")
+		println("Consumer API secret: $apiSecret")
+		println("Access token: ${accessToken.token}")
+		println("Access token secret: ${accessToken.tokenSecret}")
+	}
+}
+
+private class RunCommand : CliktCommand(
+	name = "run",
 	help = "Block and quickly unblock all followers to keep count at zero",
 ) {
 	private val accessToken by option(metavar = "KEY")

@@ -7,7 +7,7 @@ fi
 # If the sync fails we want to avoid triggering the health check.
 set -e
 
-/app/bin/singular-solution \
+/app/bin/singular-solution run \
 	--access-token "$ACCESS_TOKEN" \
 	--access-secret "$ACCESS_SECRET" \
 	--api-key "$API_KEY" \
