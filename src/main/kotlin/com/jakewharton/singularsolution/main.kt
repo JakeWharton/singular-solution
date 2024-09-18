@@ -3,6 +3,7 @@
 package com.jakewharton.singularsolution
 
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.Context
 import com.github.ajalt.clikt.core.NoOpCliktCommand
 import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.core.subcommands
@@ -29,10 +30,10 @@ fun main(vararg args: String) {
 		.main(args)
 }
 
-private class AuthCommand : CliktCommand(
-	name = "auth",
-	help = "Perform interactive authentication to get an access token and secret",
-) {
+private class AuthCommand : CliktCommand("auth") {
+	override fun help(context: Context) =
+		"Perform interactive authentication to get an access token and secret"
+
 	private val apiKey by option(metavar = "KEY")
 		.required()
 		.help("OAuth consumer API key")
@@ -66,10 +67,10 @@ private class AuthCommand : CliktCommand(
 	}
 }
 
-private class RunCommand : CliktCommand(
-	name = "run",
-	help = "Block and quickly unblock all followers to keep count at zero",
-) {
+private class RunCommand : CliktCommand("run") {
+	override fun help(context: Context) =
+		"Block and quickly unblock all followers to keep count at zero"
+
 	private val accessToken by option(metavar = "KEY")
 		.required()
 		.help("OAuth access token")
