@@ -16,7 +16,7 @@ application {
 
 dependencies {
 	implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0'
-	implementation 'com.github.ajalt.clikt:clikt:5.0.0'
+	implementation 'com.github.ajalt.clikt:clikt:5.0.1'
 	implementation 'org.twitter4j:twitter4j-core:4.1.2'
 	implementation 'com.github.scribejava:scribejava-apis:8.3.3'
 }
