@@ -1,4 +1,4 @@
-FROM adoptopenjdk:8-jdk-hotspot AS build
+FROM azul/zulu-openjdk-alpine:24-latest AS build
 ENV GRADLE_OPTS="-Dorg.gradle.daemon=false -Dkotlin.incremental=false"
 WORKDIR /app
 
@@ -24,9 +24,7 @@ COPY .editorconfig /
 RUN shfmt -d .
 
 
-
-
-FROM oznu/s6-alpine:3.13
+FROM project42/s6-alpine:3.19
 LABEL maintainer="Jake Wharton <docker@jakewharton.com>"
 
 RUN apk add --no-cache \
@@ -47,6 +45,8 @@ ENV \
     HEALTHCHECK_HOST="https://hc-ping.com" \
     PUID="" \
     PGID=""
+
 COPY root/ /
+
 WORKDIR /app
 COPY --from=build /app/build/install/singular-solution ./
