@@ -1,9 +1,12 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
 buildscript {
 	repositories {
 		mavenCentral()
 	}
 	dependencies {
-		classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.21'
+		classpath libs.kotlin.gradlePlugin
 	}
 }
 
@@ -15,10 +18,10 @@ application {
 }
 
 dependencies {
-	implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2'
-	implementation 'com.github.ajalt.clikt:clikt:5.0.3'
-	implementation 'org.twitter4j:twitter4j-core:4.1.2'
-	implementation 'com.github.scribejava:scribejava-apis:8.3.3'
+	implementation libs.kotlinx.coroutines.core
+	implementation libs.clikt
+	implementation libs.twitter4j
+	implementation libs.scribeJavaApis
 }
 
 repositories {
@@ -30,4 +33,15 @@ tasks.named("distTar").configure { task ->
 }
 tasks.named("assemble").configure { task ->
 	task.dependsOn(tasks.named("installDist"))
+}
+
+tasks.withType(KotlinJvmCompile).configureEach { task ->
+	task.compilerOptions {
+		jvmTarget = JvmTarget.JVM_1_8
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	sourceCompatibility = JavaVersion.VERSION_1_8.toString()
+	targetCompatibility = JavaVersion.VERSION_1_8.toString()
 }
