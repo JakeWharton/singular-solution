@@ -42,9 +42,7 @@ ENV \
     API_KEY="" \
     API_SECRET="" \
     HEALTHCHECK_ID="" \
-    HEALTHCHECK_HOST="https://hc-ping.com" \
-    PUID="" \
-    PGID=""
+    HEALTHCHECK_HOST="https://hc-ping.com"
 
 COPY root/ /
 
