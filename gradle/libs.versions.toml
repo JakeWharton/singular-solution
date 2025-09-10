@@ -1,5 +1,5 @@
 [libraries]
-kotlin-gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.10"
+kotlin-gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.20"
 
 kotlinx-coroutines-core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2"
 
