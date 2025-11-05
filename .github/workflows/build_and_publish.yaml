@@ -24,16 +24,17 @@ jobs:
 
       - run: ./gradlew build
 
-      - uses: crazy-max/ghaction-docker-meta@v1
+      - uses: crazy-max/ghaction-docker-meta@v5
         id: docker_meta
         with:
           images: |
             jakewharton/singular-solution
             ghcr.io/jakewharton/singular-solution
-          tag-semver: |
-            {{version}}
-            {{major}}
-            {{major}}.{{minor}}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}
+            type=semver,pattern={{major}}.{{minor}}
 
       - uses: docker/login-action@v3
         with:
