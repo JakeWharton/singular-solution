@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- New: Linux Arm variant of Docker container.
+
+
 ## [2.0.0]
 
 - **Breaking change**: The old CLI behavior is now under the `run` subcommand.
