@@ -24,7 +24,7 @@ COPY .editorconfig /
 RUN shfmt -d .
 
 
-FROM crazymax/alpine-s6:3.23
+FROM crazymax/alpine-s6:3.24
 LABEL maintainer="Jake Wharton <docker@jakewharton.com>"
 
 RUN apk add --no-cache \
